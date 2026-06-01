@@ -13,9 +13,9 @@
 
     <!-- 添加按钮 -->
     <div class="tools-div">
-        <el-button type="success" size="small" @click="addShow">添 加</el-button>
+      <el-button type="success" size="small" @click="addShow">添 加</el-button>
     </div>
-      
+
     <!--- 角色表格数据 -->
     <el-table :data="list" style="width: 100%">
       <el-table-column prop="roleName" label="角色名称" width="180" />
@@ -28,24 +28,18 @@
     </el-table>
 
     <!--分页条-->
-    <el-pagination
-      v-model:current-page="pageParams.page"
-      v-model:page-size="pageParams.limit"
-      :page-sizes="[2, 4, 8, 10]"
-      @size-change="fetchData"
-      @current-change="fetchData"
-      layout="total, sizes, prev, pager, next"
-      :total="total"
-    />
+    <el-pagination v-model:current-page="pageParams.page" v-model:page-size="pageParams.limit"
+      :page-sizes="[2, 4, 6, 8]" @size-change="fetchData" @current-change="fetchData"
+      layout="total, sizes, prev, pager, next" :total="total" />
   </div>
   <!-- 页面表单 -->
   <el-dialog v-model="dialogVisible" title="添加或修改角色" width="30%">
     <el-form label-width="120px">
       <el-form-item label="角色名称">
-        <el-input v-model="sysRole.roleName"/>
+        <el-input v-model="sysRole.roleName" />
       </el-form-item>
       <el-form-item label="角色Code">
-        <el-input  v-model="sysRole.roleCode"/>
+        <el-input v-model="sysRole.roleCode" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submit">提交</el-button>
@@ -56,8 +50,8 @@
 </template>
 
 <script setup>
-import { ref , onMounted } from 'vue';
-import { GetSysRoleListByPage , SaveSysRole, UpdateSysRole, DeleteSysRoleById} from '@/api/sysRole';
+import { ref, onMounted } from 'vue';
+import { GetSysRoleListByPage, SaveSysRole, UpdateSysRole, DeleteSysRoleById } from '@/api/sysRole';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 let total = ref(0)
@@ -77,22 +71,22 @@ const sysRole = ref({
 })
 
 onMounted(() => {
-  fetchData() ;
+  fetchData();
 })
 
 const fetchData = async () => {
-  const {data , code , message } = await GetSysRoleListByPage(pageParams.value.page , pageParams.value.limit , queryDto.value) ;
-  list.value = data.list ;
+  const { data, code, message } = await GetSysRoleListByPage(pageParams.value.page, pageParams.value.limit, queryDto.value);
+  list.value = data.list;
   total.value = data.total
 }
 
 const searchSysRole = () => {
-  fetchData() ;
+  fetchData();
 }
 
 const resetData = () => {
   queryDto.value.roleName = ""
-  fetchData() ;
+  fetchData();
 }
 
 const addShow = () => {
@@ -107,16 +101,16 @@ const addShow = () => {
 
 // 添加角色
 const submit = async () => {
-  if(!sysRole.value.id) {
-    const { code } = await SaveSysRole(sysRole.value) ;
-    if(code === 200) {
+  if (!sysRole.value.id) {
+    const { code } = await SaveSysRole(sysRole.value);
+    if (code === 200) {
       dialogVisible.value = false
       ElMessage.success('操作成功')
       fetchData()
     }
-  }else {
-    const { code } = await UpdateSysRole(sysRole.value) ;
-    if(code === 200) {
+  } else {
+    const { code } = await UpdateSysRole(sysRole.value);
+    if (code === 200) {
       dialogVisible.value = false
       ElMessage.success('操作成功')
       fetchData()
@@ -138,7 +132,7 @@ const deleteById = (row) => {
     type: 'warning',
   }).then(async () => {
     const { code } = await DeleteSysRoleById(row.id)
-    if(code === 200) {
+    if (code === 200) {
       ElMessage.success('删除成功')
       pageParams.value.page = 1
       fetchData()
@@ -148,7 +142,6 @@ const deleteById = (row) => {
 </script>
 
 <style scoped>
-
 .search-div {
   margin-bottom: 10px;
   padding: 10px;
@@ -164,5 +157,4 @@ const deleteById = (row) => {
   border-radius: 3px;
   background-color: #fff;
 }
-
 </style>
